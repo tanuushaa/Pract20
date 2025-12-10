@@ -1,0 +1,38 @@
+namespace ConsoleApp70
+{
+     class RadeoStBon
+    {
+        //поля
+        private string productName;
+        private int stock;
+
+        public RadeoStBon(string name, int initialStock)
+        {
+            productName = name;
+            stock = initialStock;
+        }
+
+        // функция
+        public void Buy(string product, int quantity)
+        {
+            Console.WriteLine($"Покупаем {product}");
+            if (quantity > stock)
+            {
+                Console.WriteLine($"Ошибка: Товар { product} закончился! Осталось: {stock}");
+            }
+            else
+            {
+                stock -= quantity;
+                Console.WriteLine($"Покупка успешна! Осталось: {stock}");
+            }
+        }
+    }
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            RadeoStBon product = new RadeoStBon("IPhone", 0);
+            product.Buy("IPhone", 1);
+        }
+    }
+}

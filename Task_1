@@ -1,0 +1,78 @@
+namespace ConsoleApp52
+{
+    class NotEnoughMoneyException : Exception
+    {
+        public decimal Balance { get; set; }
+        public decimal Amount { get; set; }
+        public NotEnoughMoneyException(decimal Balance, decimal Amount) : base($"Ошибка! Баланс: {Balance}, нужно: {Amount}") 
+        { 
+            this.Balance = Balance;
+            this.Amount = Amount;
+        }
+    }
+    class WrongPinException : Exception
+    {
+        public int Attempt { get; set; }
+        public WrongPinException(int Attempt) : base($"Неверный пинкод, осталось попыток: {Attempt}")
+        {
+
+            this.Attempt = Attempt;
+        }
+    }
+    class ATM
+    {
+        private decimal balance = 6000;
+        private int pin = 1234;
+        private int maxAttemp = 3;
+        private int currantAttemp = 0;
+        public void Withdraw(decimal amount)
+        { 
+            if (amount > balance)
+            {
+                throw new NotEnoughMoneyException(balance,amount);
+            }
+            balance = amount;
+            Console.WriteLine($"Cнято:{amount}, Остаток: {balance}");
+        }
+        private void EnterPin(int EnterPin)
+        {
+            if ( currantAttemp >= maxAttemp)
+            {
+                Console.WriteLine("Карта заблокирована");
+                return;
+            }
+            if ( EnterPin != pin)
+            {
+                currantAttemp++;
+                throw new WrongPinException(maxAttemp - currantAttemp);
+               
+            }
+            Console.WriteLine("PIN введен правильно!");
+                currantAttemp = 0;
+        }
+
+    }
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            ATM atm = new ATM();
+            Console.WriteLine($"бАЛАНС: {atm.Balance}");
+            try
+            {
+                Console.WriteLine("Снимаем 1000...");
+                atm.Withdraw(1000);
+            }
+            catch (NotEnoughMoneyException ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                Console.WriteLine("Ввод pin: ");
+               
+            }
+           
+        }
+    }
+}

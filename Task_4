@@ -1,0 +1,52 @@
+namespace ConsoleApp72
+{
+    class HeroIsDeadException : Exception
+    {
+        public int Health { get; }
+        public HeroIsDeadException(int health) : base($"Герой погиб! Здоровье стало: {health}")
+        {
+            Health = health;
+        }
+    }
+
+    class Game
+    {
+        private int health;
+
+        public Game(int initialHealth)
+        {
+            health = initialHealth;
+        }
+        public void TakeDamage(int damage)
+        {
+            health -= damage;
+            Console.WriteLine($"Получаем урон: {damage}");
+
+            if (health <= 0)
+            {
+                throw new HeroIsDeadException(health);
+            }
+
+            Console.WriteLine($"Здоровье: {health}");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Game game = new Game(100); //  здоровье героя 100 изначально
+
+            Console.WriteLine($"Здоровье: {game.Health}");
+
+            try
+            {
+                game.TakeDamage(150); // урон
+            }
+            catch (HeroIsDeadException ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
+    }
+}

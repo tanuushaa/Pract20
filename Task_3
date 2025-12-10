@@ -1,0 +1,72 @@
+namespace ConsoleApp71
+{
+    public class LoginAlreadyExistsException : Exception
+    {
+        public LoginAlreadyExistsException(string message) : base(message) 
+        {
+
+        }
+    }
+
+    public class WeakPasswordException : Exception
+    {
+        public WeakPasswordException(string message) : base(message) 
+        { 
+
+        }
+    }
+    public class UserService
+    {
+        private HashSet<string> existingLogins = new HashSet<string>();
+        public void Register(string login, string password)
+        {
+            Console.WriteLine($"Регистрация: {login}, {password}");
+
+            if (existingLogins.Contains(login))
+            {
+                throw new LoginAlreadyExistsException($"Ошибка: Логин {login} уже занят!");
+            }
+
+            if (password.Length < 6) // если пароль > 6
+            {
+                throw new WeakPasswordException("Ошибка: Слабый пароль! Минимум 6 символов");
+            }
+            // если все проверки пройдены, добавляем логин в список существующих
+            existingLogins.Add(login);
+            Console.WriteLine("Регистрация успешна!");
+        }
+    }
+    class Program
+    {
+        static void Main()
+        {
+            UserService userService = new UserService();
+            try
+            {
+                userService.Register("admin", "123");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            try
+            {
+                userService.Register("user1", "secret123");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            try
+            {
+                userService.Register("user1", "pass123");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+    }
+}
